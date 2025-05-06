@@ -40,6 +40,9 @@ namespace DDDUniversidadeBroadcast.Infra.Data
                 entity.Property(e => e.Email).IsRequired();
                 entity.HasIndex(e => e.Email).IsUnique();
 
+                entity.Property(e => e.Telefone).IsRequired();
+                entity.HasIndex(e => e.Telefone).IsUnique();
+
                 entity.Property(e => e.Curso).IsRequired();
             });
 

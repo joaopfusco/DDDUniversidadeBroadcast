@@ -14,21 +14,25 @@ namespace DDDUniversidadeBroadcast.Service.Services
 {
     public class PostagemService(IPostagemRepository repository, IEventoService eventoService, IUsuarioService usuarioService) : BaseService<Postagem>(repository), IPostagemService
     {
-        public override int Insert(Postagem model)
+        public override async Task<int> Insert(Postagem model)
         {
             var usuario = usuarioService.Get(model.AutorId)
                 .FirstOrDefault() ?? throw new Exception("User not found");
 
             var evento = eventoService.Get(model.EventoId)
-                .Include(e => e.Participantes).FirstOrDefault() ?? throw new Exception("Event not found");
+                .Include(e => e.Participantes)
+                .ThenInclude(p => p.Usuario)
+                .FirstOrDefault() ?? throw new Exception("Event not found");
 
             var texto = $"Nova postagem de {usuario.Nome} no evento {evento.Nome}. Conteudo: {model.Conteudo}";
-            Publisher.PublishAsync(texto).GetAwaiter().GetResult();
+            await Publisher.PublishAsync(texto);
 
             var participantes = evento.Participantes.ToList();
-            Subscriber.SubscribeAsync(participantes).GetAwaiter().GetResult();
+            await SubscriberDb.SubscribeAsync(participantes);
+            await SubscriberEmail.SubscribeAsync(participantes);
+            await SubscriberSms.SubscribeAsync(participantes);
 
-            return base.Insert(model);
+            return await base.Insert(model);
         }
     }
 }

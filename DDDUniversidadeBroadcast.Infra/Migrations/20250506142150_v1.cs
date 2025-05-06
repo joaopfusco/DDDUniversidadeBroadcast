@@ -36,6 +36,7 @@ namespace DDDUniversidadeBroadcast.Infra.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Telefone = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Curso = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -168,6 +169,12 @@ namespace DDDUniversidadeBroadcast.Infra.Migrations
                 name: "IX_Usuarios_Nome",
                 table: "Usuarios",
                 column: "Nome",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Usuarios_Telefone",
+                table: "Usuarios",
+                column: "Telefone",
                 unique: true);
         }
 

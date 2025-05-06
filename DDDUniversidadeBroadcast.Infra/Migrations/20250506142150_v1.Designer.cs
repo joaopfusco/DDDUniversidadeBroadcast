@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DDDUniversidadeBroadcast.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250506024404_v1")]
+    [Migration("20250506142150_v1")]
     partial class v1
     {
         /// <inheritdoc />
@@ -165,12 +165,19 @@ namespace DDDUniversidadeBroadcast.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Telefone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
                         .IsUnique();
 
                     b.HasIndex("Nome")
+                        .IsUnique();
+
+                    b.HasIndex("Telefone")
                         .IsUnique();
 
                     b.ToTable("Usuarios");

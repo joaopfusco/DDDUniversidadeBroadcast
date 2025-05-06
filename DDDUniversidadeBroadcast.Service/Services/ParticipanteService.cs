@@ -12,7 +12,7 @@ namespace DDDUniversidadeBroadcast.Service.Services
 {
     public class ParticipanteService(IParticipanteRepository repository, IEventoService eventoService) : BaseService<Participante>(repository), IParticipanteService
     {
-        public override int Insert(Participante model)
+        public override async Task<int> Insert(Participante model)
         {
             if (Get().Any(p => p.EventoId == model.EventoId && p.UsuarioId == model.UsuarioId))
                 throw new Exception("Usuário já inscrito nesse evento.");
@@ -20,7 +20,7 @@ namespace DDDUniversidadeBroadcast.Service.Services
             if (eventoService.Lotado(model.EventoId))
                 throw new Exception("O evento está lotado.");
 
-            return base.Insert(model);
+            return await base.Insert(model);
         }
     }
 }

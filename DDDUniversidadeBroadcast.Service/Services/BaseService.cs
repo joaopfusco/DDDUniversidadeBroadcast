@@ -21,19 +21,19 @@ namespace DDDUniversidadeBroadcast.Service.Services
             return _repostitory.Get(id);
         }
 
-        public virtual int Insert(TModel model)
+        public virtual async Task<int> Insert(TModel model)
         {
-            return _repostitory.Insert(model);
+            return await _repostitory.Insert(model);
         }   
 
-        public virtual int Update(TModel model)
+        public virtual async Task<int> Update(TModel model)
         {
-            return _repostitory.Update(model);
+            return await _repostitory.Update(model);
         }
 
-        public virtual int Delete(int id)
+        public virtual async Task<int> Delete(int id)
         {
-            return _repostitory.Delete(id);
+            return await _repostitory.Delete(id);
         }
     }
 }

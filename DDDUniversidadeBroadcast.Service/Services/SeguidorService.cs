@@ -11,20 +11,20 @@ namespace DDDUniversidadeBroadcast.Service.Services
 {
     public class SeguidorService(ISeguidorRepository repository) : BaseService<Seguidor>(repository), ISeguidorService
     {
-        public override int Insert(Seguidor model)
+        public override async Task<int> Insert(Seguidor model)
         {
             if (model.SegueId == model.SeguidoId)
                 throw new Exception("Não é possível seguir a si mesmo.");
 
-            return base.Insert(model);
+            return await base.Insert(model);
         }
 
-        public override int Update(Seguidor model)
+        public override async Task<int> Update(Seguidor model)
         {
             if (model.SegueId == model.SeguidoId)
                 throw new Exception("Não é possível seguir a si mesmo.");
 
-            return base.Update(model);
+            return await base.Update(model);
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace RabbitMQ.Subscriber;
 
-public class Subscriber
+public class SubscriberEmail
 {
     public static async Task SubscribeAsync(List<Participante> participantes)
     {
@@ -22,7 +22,7 @@ public class Subscriber
             type: "fanout"
         );
 
-        string queueName = "minha-fila";
+        string queueName = "minha-fila-email";
 
         await channel.QueueDeclareAsync(
             queue: queueName,
@@ -46,7 +46,7 @@ public class Subscriber
             
             try
             {
-                await PutParticipantes(participantes, texto);
+                await SendEmail(participantes, texto);
                 Console.WriteLine("Mensagem processada com sucesso!");
             }
             catch (Exception ex)
@@ -63,33 +63,19 @@ public class Subscriber
             consumer: consumer
         );
 
-        Console.WriteLine("Aguardando mensagens. Pressione [enter] para sair.");
-        Console.ReadLine();
+        Console.WriteLine("Aguardando mensagens.");
     }
 
-    private static async Task PutParticipantes(List<Participante> participantes, string texto) 
+    private static async Task SendEmail(List<Participante> participantes, string texto) 
     {
         using var httpClient = new HttpClient();
 
         foreach (var participante in participantes)
         {
-            participante.UltimaNotificacao = texto;
-
-            var url = $"http://localhost:5000/api/participante/{participante.Id}";
-            var content = new StringContent(
-                JsonSerializer.Serialize(participante),
-                Encoding.UTF8,
-                "application/json"
-            );
-            var response = await httpClient.PutAsync(url, content);
-            if (response.IsSuccessStatusCode)
-            {
-                Console.WriteLine($"Participante {participante.Id} atualizado com sucesso.");
-            }
-            else
-            {
-                Console.WriteLine($"Erro ao atualizar participante {participante.Id}: {response.StatusCode}");
-            }
+            var email = participante.Usuario.Email;
+            Console.WriteLine($"Enviando email para {email} com o texto: {texto}");
+            await Task.Delay(500);
+            Console.WriteLine($"Email enviado para {email} com sucesso!");
         }
     }
 }

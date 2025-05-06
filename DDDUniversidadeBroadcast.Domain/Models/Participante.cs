@@ -9,6 +9,8 @@ namespace DDDUniversidadeBroadcast.Domain.Models
 {
     public class Participante : BaseModel
     {
+        public string UltimaNotificacao { get; set; }
+
         public int EventoId { get; set; }
 
         public int UsuarioId { get; set; }

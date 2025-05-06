@@ -66,6 +66,9 @@ namespace DDDUniversidadeBroadcast.Infra.Migrations
                     b.Property<int>("EventoId")
                         .HasColumnType("int");
 
+                    b.Property<string>("UltimaNotificacao")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 

@@ -1,4 +1,5 @@
-﻿using RabbitMQ.Client;
+﻿using DDDUniversidadeBroadcast.Domain.Models;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
 using System.Text;
@@ -8,7 +9,7 @@ namespace RabbitMQ.Subscriber;
 
 public class Subscriber
 {
-    public async Task SubscribeAsync()
+    public static async Task SubscribeAsync(List<Participante> participantes)
     {
         var factory = new ConnectionFactory { HostName = "localhost" };
 
@@ -41,17 +42,17 @@ public class Subscriber
         consumer.ReceivedAsync += async (model, ea) =>
         {
             var body = ea.Body.ToArray();
-            var json = Encoding.UTF8.GetString(body);
-            int code = 0;
-
-            var entity = JsonSerializer.Deserialize<dynamic>(json);
-            if (entity != null)
+            var texto = Encoding.UTF8.GetString(body);
+            
+            try
             {
-                Console.WriteLine("Recebido ENTIDADE. Enviando para a API...");
-                
+                await PutParticipantes(participantes, texto);
+                Console.WriteLine("Mensagem processada com sucesso!");
             }
-
-            Console.WriteLine("Mensagem processada com erro!");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao processar a mensagem: {ex.Message}");
+            }
 
             await Task.CompletedTask;
         };
@@ -64,5 +65,31 @@ public class Subscriber
 
         Console.WriteLine("Aguardando mensagens. Pressione [enter] para sair.");
         Console.ReadLine();
+    }
+
+    private static async Task PutParticipantes(List<Participante> participantes, string texto) 
+    {
+        using var httpClient = new HttpClient();
+
+        foreach (var participante in participantes)
+        {
+            participante.UltimaNotificacao = texto;
+
+            var url = $"http://localhost:5000/api/participante/{participante.Id}";
+            var content = new StringContent(
+                JsonSerializer.Serialize(participante),
+                Encoding.UTF8,
+                "application/json"
+            );
+            var response = await httpClient.PutAsync(url, content);
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Participante {participante.Id} atualizado com sucesso.");
+            }
+            else
+            {
+                Console.WriteLine($"Erro ao atualizar participante {participante.Id}: {response.StatusCode}");
+            }
+        }
     }
 }

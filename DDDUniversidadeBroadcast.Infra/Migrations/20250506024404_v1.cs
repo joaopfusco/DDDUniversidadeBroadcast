@@ -49,6 +49,7 @@ namespace DDDUniversidadeBroadcast.Infra.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    UltimaNotificacao = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EventoId = table.Column<int>(type: "int", nullable: false),
                     UsuarioId = table.Column<int>(type: "int", nullable: false)
                 },

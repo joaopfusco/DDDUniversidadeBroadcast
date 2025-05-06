@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DDDUniversidadeBroadcast.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250506005807_v1")]
+    [Migration("20250506024404_v1")]
     partial class v1
     {
         /// <inheritdoc />
@@ -68,6 +68,9 @@ namespace DDDUniversidadeBroadcast.Infra.Migrations
 
                     b.Property<int>("EventoId")
                         .HasColumnType("int");
+
+                    b.Property<string>("UltimaNotificacao")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");

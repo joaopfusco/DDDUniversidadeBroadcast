@@ -15,13 +15,13 @@ namespace DDDUniversidadeBroadcast.Infra.Migrations
                 name: "Eventos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Local = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DataHora = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Aberto = table.Column<bool>(type: "bit", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Nome = table.Column<string>(type: "TEXT", nullable: false),
+                    Local = table.Column<string>(type: "TEXT", nullable: false),
+                    Descricao = table.Column<string>(type: "TEXT", nullable: true),
+                    DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Aberto = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,12 +32,12 @@ namespace DDDUniversidadeBroadcast.Infra.Migrations
                 name: "Usuarios",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Telefone = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Curso = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Nome = table.Column<string>(type: "TEXT", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", nullable: false),
+                    Telefone = table.Column<string>(type: "TEXT", nullable: false),
+                    Curso = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -48,11 +48,11 @@ namespace DDDUniversidadeBroadcast.Infra.Migrations
                 name: "Participantes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UltimaNotificacao = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EventoId = table.Column<int>(type: "int", nullable: false),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UltimaNotificacao = table.Column<string>(type: "TEXT", nullable: true),
+                    EventoId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UsuarioId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -73,14 +73,14 @@ namespace DDDUniversidadeBroadcast.Infra.Migrations
                 name: "Postagens",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AutorId = table.Column<int>(type: "int", nullable: false),
-                    EventoId = table.Column<int>(type: "int", nullable: false),
-                    Conteudo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DataHora = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Curtidas = table.Column<int>(type: "int", nullable: false),
-                    Comentarios = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    AutorId = table.Column<int>(type: "INTEGER", nullable: false),
+                    EventoId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Conteudo = table.Column<string>(type: "TEXT", nullable: false),
+                    DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Curtidas = table.Column<int>(type: "INTEGER", nullable: false),
+                    Comentarios = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -101,10 +101,10 @@ namespace DDDUniversidadeBroadcast.Infra.Migrations
                 name: "Seguidores",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SegueId = table.Column<int>(type: "int", nullable: false),
-                    SeguidoId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    SegueId = table.Column<int>(type: "INTEGER", nullable: false),
+                    SeguidoId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

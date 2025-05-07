@@ -7,6 +7,7 @@ using DDDUniversidadeBroadcast.Infra.Data;
 using DDDUniversidadeBroadcast.Service.Interfaces;
 using DDDUniversidadeBroadcast.Service.Services;
 using Hangfire;
+using Hangfire.SQLite;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.NewtonsoftJson;
@@ -52,7 +53,7 @@ builder.Services.AddHangfire(configuration => configuration
     .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
     .UseSimpleAssemblyNameTypeSerializer()
     .UseRecommendedSerializerSettings()
-    .UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"))
+    .UseSQLiteStorage(builder.Configuration.GetConnectionString("DefaultConnection"))
     .WithJobExpirationTimeout(TimeSpan.FromDays(10)));
 
 builder.Services.AddHangfireServer();
@@ -105,17 +106,17 @@ var subscriberSms = scope.ServiceProvider.GetRequiredService<SubscriberSms>();
 RecurringJob.AddOrUpdate(
      "SubscriberDb",
      () => subscriberDb.SubscribeAsync(),
-     "*/3 * * * *");
+     Cron.Minutely);
 
 RecurringJob.AddOrUpdate(
     "SubscriberEmail",
     () => subcriberEmail.SubscribeAsync(),
-    "1-59/3 * * * *");
+    Cron.Minutely);
 
 RecurringJob.AddOrUpdate(
     "SubscriberSms",
     () => subscriberSms.SubscribeAsync(),
-    "2-59/3 * * * *");
+    Cron.Minutely);
 
 app.UseCors("CorsPolicy");
 

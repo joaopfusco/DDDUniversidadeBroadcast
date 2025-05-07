@@ -104,7 +104,7 @@ namespace DDDUniversidadeBroadcast.Infra.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_connectionString);
+            optionsBuilder.UseSqlite(_connectionString);
         }
     }
 }

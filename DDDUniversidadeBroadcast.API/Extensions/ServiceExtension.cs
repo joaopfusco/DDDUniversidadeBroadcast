@@ -2,6 +2,7 @@
 using DDDUniversidadeBroadcast.Infra.Repositories;
 using DDDUniversidadeBroadcast.Service.Interfaces;
 using DDDUniversidadeBroadcast.Service.Services;
+using RabbitMQ.Subscriber;
 
 namespace DDDUniversidadeBroadcast.API.Extensions
 {
@@ -14,6 +15,10 @@ namespace DDDUniversidadeBroadcast.API.Extensions
             services.AddTransient<IPostagemService, PostagemService>();
             services.AddTransient<ISeguidorService, SeguidorService>();
             services.AddTransient<IParticipanteService, ParticipanteService>();
+
+            services.AddTransient<SubscriberDb>();
+            services.AddTransient<SubscriberEmail>();
+            services.AddTransient<SubscriberSms>();
 
             return services;
         }

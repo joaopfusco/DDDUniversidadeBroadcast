@@ -3,7 +3,6 @@ using DDDUniversidadeBroadcast.Infra.Interfaces;
 using DDDUniversidadeBroadcast.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using RabbitMQ.Publisher;
-using RabbitMQ.Subscriber;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,23 +15,9 @@ namespace DDDUniversidadeBroadcast.Service.Services
     {
         public override async Task<int> Insert(Postagem model)
         {
-            var usuario = usuarioService.Get(model.AutorId)
-                .FirstOrDefault() ?? throw new Exception("User not found");
-
-            var evento = eventoService.Get(model.EventoId)
-                .Include(e => e.Participantes)
-                .ThenInclude(p => p.Usuario)
-                .FirstOrDefault() ?? throw new Exception("Event not found");
-
-            var texto = $"Nova postagem de {usuario.Nome} no evento {evento.Nome}. Conteudo: {model.Conteudo}";
-            await Publisher.PublishAsync(texto);
-
-            var participantes = evento.Participantes.ToList();
-            await SubscriberDb.SubscribeAsync(participantes);
-            await SubscriberEmail.SubscribeAsync(participantes);
-            await SubscriberSms.SubscribeAsync(participantes);
-
-            return await base.Insert(model);
+            var result = await base.Insert(model);
+            await Publisher.PublishAsync(model.Id.ToString());
+            return result;
         }
     }
 }

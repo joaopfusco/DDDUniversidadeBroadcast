@@ -7,14 +7,14 @@ namespace RabbitMQ.Publisher;
 
 public class Publisher
 {
-    public static async Task PublishAsync(string texto)
+    public static async Task PublishAsync(string postagemId)
     {
         var factory = new ConnectionFactory { HostName = "localhost" };
 
         using var connection = await factory.CreateConnectionAsync();
         using var channel = await connection.CreateChannelAsync();
 
-        var body = Encoding.UTF8.GetBytes(texto);
+        var body = Encoding.UTF8.GetBytes(postagemId);
 
         string exchangeName = "meu_exchange_fanout";
         await channel.ExchangeDeclareAsync(

@@ -17,7 +17,7 @@ namespace DDDUniversidadeBroadcast.API.Controllers
         protected readonly IBaseService<TModel> _service = service;
         protected readonly ILogger _logger = logger;
 
-        [EnableQuery]
+        [EnableQuery(MaxExpansionDepth = 5)]
         [HttpGet]
         public virtual IActionResult Get()
         {

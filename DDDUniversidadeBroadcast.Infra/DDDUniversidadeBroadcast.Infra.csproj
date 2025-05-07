@@ -22,8 +22,6 @@
 
   <ItemGroup>
 	<ProjectReference Include="..\DDDUniversidadeBroadcast.Domain\DDDUniversidadeBroadcast.Domain.csproj" />
-	<ProjectReference Include="..\RabbitMQ.Publisher\RabbitMQ.Publisher.csproj" />
-	<ProjectReference Include="..\RabbitMQ.Subscriber\RabbitMQ.Subscriber.csproj" />
   </ItemGroup>
 
 </Project>

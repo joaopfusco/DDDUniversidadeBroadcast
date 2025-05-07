@@ -1,4 +1,7 @@
 ﻿using DDDUniversidadeBroadcast.Domain.Models;
+using DDDUniversidadeBroadcast.Service.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
@@ -7,9 +10,9 @@ using System.Text.Json;
 
 namespace RabbitMQ.Subscriber;
 
-public class SubscriberEmail
+public class SubscriberEmail(IServiceScopeFactory scopeFactory)
 {
-    public static async Task SubscribeAsync(List<Participante> participantes)
+    public async Task SubscribeAsync()
     {
         var factory = new ConnectionFactory { HostName = "localhost" };
 
@@ -42,11 +45,11 @@ public class SubscriberEmail
         consumer.ReceivedAsync += async (model, ea) =>
         {
             var body = ea.Body.ToArray();
-            var texto = Encoding.UTF8.GetString(body);
+            var postagemId = Encoding.UTF8.GetString(body);
             
             try
             {
-                await SendEmail(participantes, texto);
+                await SendEmail(postagemId);
                 Console.WriteLine("Mensagem processada com sucesso!");
             }
             catch (Exception ex)
@@ -66,12 +69,23 @@ public class SubscriberEmail
         Console.WriteLine("Aguardando mensagens.");
     }
 
-    private static async Task SendEmail(List<Participante> participantes, string texto) 
+    private async Task SendEmail(string postagemId) 
     {
         using var httpClient = new HttpClient();
 
-        foreach (var participante in participantes)
+        using var scope = scopeFactory.CreateScope();
+        var service = scope.ServiceProvider.GetRequiredService<IPostagemService>();
+
+        var postagem = service.Get(int.Parse(postagemId))
+            .Include(p => p.Autor)
+            .Include(p => p.Evento)
+            .ThenInclude(e => e.Participantes)
+            .ThenInclude(p => p.Usuario)
+            .FirstOrDefault() ?? throw new Exception($"Postagem {postagemId} nao encontrada.");
+
+        foreach (var participante in postagem.Evento.Participantes)
         {
+            var texto = $"Nova postagem de {postagem.Autor.Nome} no evento {postagem.Evento.Nome}. Conteudo: {postagem.Conteudo}";
             var email = participante.Usuario.Email;
             Console.WriteLine($"Enviando email para {email} com o texto: {texto}");
             await Task.Delay(500);

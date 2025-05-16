@@ -16,10 +16,6 @@ namespace DDDUniversidadeBroadcast.API.Extensions
             services.AddTransient<ISeguidorService, SeguidorService>();
             services.AddTransient<IParticipanteService, ParticipanteService>();
 
-            services.AddTransient<SubscriberDb>();
-            services.AddTransient<SubscriberEmail>();
-            services.AddTransient<SubscriberSms>();
-
             return services;
         }
     }

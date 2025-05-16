@@ -1,4 +1,5 @@
 ﻿using DDDUniversidadeBroadcast.Domain.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,19 +14,19 @@ namespace RabbitMQ.Subscriber
         public static async Task<Postagem> Get(int postagemId)
         {
             using var httpClient = new HttpClient();
-            var url = $"http://localhost:5000/api/postagem?$filter=id+eq+{postagemId}&$expand=Autor,Evento($expand=Participantes($expand=Usuario))";
+            var url = $"http://localhost:5000/api/postagem/getPostagem/{postagemId}";
             var response = await httpClient.GetAsync(url);
             if (response.IsSuccessStatusCode)
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
-                var postagens = JsonSerializer.Deserialize<List<Postagem>>(jsonString);
+                var postagem = JsonConvert.DeserializeObject<Postagem>(jsonString);
 
-                if (postagens == null)
+                if (postagem == null)
                 {
                     throw new Exception($"Erro ao desserializar a postagem {postagemId}: o resultado é nulo.");
                 }
 
-                return postagens.FirstOrDefault() ?? throw new Exception($"Postagem {postagemId} nao encontrada.");
+                return postagem ?? throw new Exception($"Postagem {postagemId} nao encontrada.");
             }
             else
             {

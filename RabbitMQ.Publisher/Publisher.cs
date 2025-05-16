@@ -7,26 +7,29 @@ namespace RabbitMQ.Publisher;
 
 public class Publisher
 {
-    public static async Task PublishAsync(string postagemId)
+    public static void SendMessage(string postagemId)
     {
         var factory = new ConnectionFactory { HostName = "localhost" };
 
-        using var connection = await factory.CreateConnectionAsync();
-        using var channel = await connection.CreateChannelAsync();
+        using var connection = factory.CreateConnection();
+        using var model = connection.CreateModel();
 
         var body = Encoding.UTF8.GetBytes(postagemId);
 
         string exchangeName = "meu_exchange_fanout";
-        await channel.ExchangeDeclareAsync(
+        model.ExchangeDeclare(
             exchange: exchangeName,
-            type: "fanout"
+            type: ExchangeType.Fanout
         );
 
-        await channel.BasicPublishAsync(
+        var properties = model.CreateBasicProperties();
+        properties.Persistent = true;
+
+        model.BasicPublish(
             exchange: exchangeName,
             routingKey: "",
-            mandatory: false,
-            body: body
+            body: body,
+            basicProperties: properties
         );
 
         Console.WriteLine("Mensagem enviada!");

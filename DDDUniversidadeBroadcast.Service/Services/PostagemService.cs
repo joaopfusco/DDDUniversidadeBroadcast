@@ -16,7 +16,7 @@ namespace DDDUniversidadeBroadcast.Service.Services
         public override async Task<int> Insert(Postagem model)
         {
             var result = await base.Insert(model);
-            await Publisher.PublishAsync(model.Id.ToString());
+            Publisher.SendMessage(model.Id.ToString());
             return result;
         }
     }
